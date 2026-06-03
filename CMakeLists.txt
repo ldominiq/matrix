@@ -1,4 +1,4 @@
-﻿# CMakeList.txt : CMake project for matrix, include source and define
+# CMakeList.txt : CMake project for matrix, include source and define
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.10)
@@ -9,13 +9,15 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("matrix")
+project ("matrix" LANGUAGES CXX)
 
-# Add source to this project's executable.
-add_executable (matrix "matrix.cpp" "matrix.h")
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET matrix PROPERTY CXX_STANDARD 20)
-endif()
+# Header-only library shared by every exercise (Vector.hpp / Matrix.hpp).
+add_library(matrixlib INTERFACE)
+target_include_directories(matrixlib INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_compile_features(matrixlib INTERFACE cxx_std_20)
 
-# TODO: Add tests and install targets if needed.
+# One subdirectory per exercise. Add the next line as you create each folder.
+add_subdirectory(ex00)
