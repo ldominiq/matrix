@@ -21,14 +21,16 @@ struct Vector {
 		return data.size();
 	}
 
-	K& operator[](size_t i) {
+	K&			operator[](size_t i) {
 		return data[i];
 	}
-	const K& operator[](size_t i) const {
+	const K&	operator[](size_t i) const {
 		return data[i];
 	}
 
-	Vector<K>& operator+=(const Vector<K>& v) {
+	// Time complexity	O(n)
+	// Space complexity O(1)
+	Vector<K>&	operator+=(const Vector<K>& v) {
 		assert(size() == v.size());
 		for (size_t i = 0; i < size(); ++i) {
 			data[i] += v[i];
@@ -36,7 +38,9 @@ struct Vector {
 		return *this;
 	}
 
-	Vector<K>& operator-=(const Vector<K>& v) {
+	// Time complexity	O(n)
+	// Space complexity O(1)
+	Vector<K>&	operator-=(const Vector<K>& v) {
 		assert(size() == v.size());
 		for (size_t i = 0; i < size(); ++i) {
 			data[i] -= v[i];
@@ -44,7 +48,9 @@ struct Vector {
 		return *this;
 	}
 
-	Vector<K>& operator*=(const K a) {
+	// Time complexity	O(n)
+	// Space complexity O(1)
+	Vector<K>&	operator*=(const K a) {
 		for (size_t i = 0; i < size(); ++i) {
 			data[i] *= a;
 		}
@@ -57,7 +63,7 @@ struct Vector {
 	// Compute the substraction of a vector by another
 	void sub(Vector<K>& v) { *this -= v; }
 
-	// Compute the scaling of a vector by s scalar
+	// Compute the scaling of a vector by a scalar
 	void scl(K a) { *this *= a; }
 
 	// Print the vector on the standard output
