@@ -44,6 +44,13 @@ struct Vector {
 		return *this;
 	}
 
+	Vector<K>& operator*=(const K a) {
+		for (size_t i = 0; i < size(); ++i) {
+			data[i] *= a;
+		}
+		return *this;
+	}
+
 	// Compute the addiction of 2 vectors
 	void add(Vector<K>& v) { *this += v; }
 

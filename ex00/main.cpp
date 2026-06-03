@@ -37,6 +37,16 @@ static void test_sub() {
     std::cout << "\texpected [-3, -4]\n";
 }
 
+static void test_scl() {
+    Vector<float> u{ 2.0f, 3.0f };
+
+    u.scl(2);
+
+    std::cout << "scl  ";
+    u.print();
+    std::cout << "\texpected [4, 6]\n";
+}
+
 // Should do Assertion failed: size() == v.size()
 static void test_undefined() {
     Vector<float> u{ 3.0f, 2.0f };
@@ -52,6 +62,7 @@ static void test_undefined() {
 int main() {
     test_add();
     test_sub();
+    test_scl();
     //test_undefined();
 
     return 0;
