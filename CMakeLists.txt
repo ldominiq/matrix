@@ -21,3 +21,4 @@ target_compile_features(matrixlib INTERFACE cxx_std_20)
 
 # One subdirectory per exercise. Add the next line as you create each folder.
 add_subdirectory(ex00)
+add_subdirectory(ex01)

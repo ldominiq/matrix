@@ -4,6 +4,8 @@
 #include <vector>
 #include <initializer_list>
 #include <cassert>
+#include <cmath>
+#include <iostream>
 
 /*
 	If the mathematical operation is nonsensical (ie, summing a vector and a scalar, or vectors of different sizes),
@@ -16,6 +18,9 @@ struct Vector {
 
 	Vector() = default;
 	Vector(std::initializer_list<K> list) : data(list) {}
+	Vector(size_t n) {
+		data.assign(n, K{});
+	}
 
 	size_t size() const {
 		return data.size();
@@ -77,5 +82,24 @@ struct Vector {
 	// TODO: • A function to reshape a vector into a matrix, and vice-versa.
 
 };
+
+// Time complexity	O(n)
+// Space complexity O(n)
+// Compute a linear combination of the vectors provided using the correspondign scalar coefficients
+template <typename K>
+Vector<K> linear_combination(const std::vector<Vector<K>>& u, const std::vector<K>& coefs) {
+	assert(u.size() == coefs.size());
+	assert(!u.empty());
+
+	size_t dim = u[0].size();
+	Vector<K> result(dim);
+
+	for (size_t i = 0; i < dim ; ++i) {
+		for (size_t j = 0; j < u.size() ; ++j) {
+			result[i] = std::fma(coefs[j], u[j][i], result[i]);
+		}
+	}
+	return result;
+}
 
 #endif
