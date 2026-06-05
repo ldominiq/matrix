@@ -10,7 +10,6 @@
  *   Matrix [[1,2],[3,4]] * 2.              ->  [[2,4],[6,8]]
  */
 
-#include <iostream>
 #include "Vector.hpp"
 #include "Matrix.hpp"
 
