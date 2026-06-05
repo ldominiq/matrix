@@ -33,7 +33,7 @@ struct Matrix {
 
 	// Time complexity	O(n*m)
 	// Space complexity O(1)
-	Matrix<K>&	operator+=(Matrix<K>& m) {
+	const Matrix<K>& operator+=(Matrix<K>& m) {
 		assert(rows() == m.rows() && cols() == m.cols());
 		for (size_t i = 0; i < rows(); ++i) {
 			for (size_t j = 0; j < cols(); ++j) {
@@ -45,7 +45,7 @@ struct Matrix {
 
 	// Time complexity	O(n*m)
 	// Space complexity O(1)
-	Matrix<K>&	operator-=(Matrix<K>& m) {
+	const Matrix<K>& operator-=(Matrix<K>& m) {
 		assert(rows() == m.rows() && cols() == m.cols());
 		for (size_t i = 0; i < rows(); ++i) {
 			for (size_t j = 0; j < cols(); j++) {

@@ -86,16 +86,17 @@ struct Vector {
 // Time complexity	O(n)
 // Space complexity O(n)
 // Compute a linear combination of the vectors provided using the correspondign scalar coefficients
+// result = λ₁·u₁ + λ₂·u₂ + λ₃·u₃
 template <typename K>
 Vector<K> linear_combination(const std::vector<Vector<K>>& u, const std::vector<K>& coefs) {
 	assert(u.size() == coefs.size());
 	assert(!u.empty());
 
 	size_t dim = u[0].size();
-	Vector<K> result(dim);
+	Vector<K> result(dim); // zero filled vector of diemsion dim
 
-	for (size_t i = 0; i < dim ; ++i) {
-		for (size_t j = 0; j < u.size() ; ++j) {
+	for (size_t i = 0; i < dim ; ++i) {				// i = which coordinate of the result
+		for (size_t j = 0; j < u.size() ; ++j) {	// j = which vector in the list
 			result[i] = std::fma(coefs[j], u[j][i], result[i]);
 		}
 	}
