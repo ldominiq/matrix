@@ -79,6 +79,15 @@ struct Vector {
 		std::cout << ']';
 	}
 
+	// Compute the dot product of u*v
+	K dot(const Vector<K>& v) const {
+		K result = K{};
+		for (size_t i = 0; i < size(); ++i) {
+			result += data[i] * v[i];
+		}
+		return result;
+	}
+
 	// TODO: • A function to reshape a vector into a matrix, and vice-versa.
 
 };
