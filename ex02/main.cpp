@@ -1,3 +1,5 @@
+// Exercise 02 - Linear interpolation
+
 #include "Vector.hpp"
 #include "Matrix.hpp"
 #include "operations.hpp"
