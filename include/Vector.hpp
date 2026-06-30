@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 /*
 	If the mathematical operation is nonsensical (ie, summing a vector and a scalar, or vectors of different sizes),
@@ -84,6 +85,43 @@ struct Vector {
 		K result = K{};
 		for (size_t i = 0; i < size(); ++i) {
 			result += data[i] * v[i];
+		}
+		return result;
+	}
+
+	K abs_val(K x) const {
+		return x < K(0) ? -x : x;
+	}
+
+	// Manhattan norm
+	/*
+		Measures the distance by summing the absolute differences of the vector's components.
+		It is like walking city blocks where you can only move horizontally and vertically.
+	*/
+	float norm_1() const {
+		float result = 0.0f;
+		for (size_t i = 0; i < size(); ++i) {
+			result += abs_val(data[i]);
+		}
+		return result; 
+	}
+
+	// Euclidean norm
+	// Measures the shortest straight-line distance, as if a bird could fly directly to the destination.
+	float norm() const {
+		float result = 0.0f;
+		for (size_t i = 0; i < size(); ++i) {
+			result = std::fma(data[i], data[i], result);
+		}
+		return std::pow(result, 0.5); // pow 0.5 -> sqrt
+	}
+
+	// supremum norm
+	// Evaluates the vector by finding its single component with the largest absolute magnitude (the "max" deviation).
+	float norm_inf() const {
+		float result = 0.0f;
+		for (size_t i = 0; i < size(); i++) {
+			result = std::max(result, abs_val(data[i]));
 		}
 		return result;
 	}
