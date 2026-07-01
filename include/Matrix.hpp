@@ -7,6 +7,8 @@
 #include <iostream>
 #include <cmath> // for fma
 
+#include "Vector.hpp"
+
 /*
 	If the mathematical operation is nonsensical (ie, summing a vector and a scalar, or vectors of different sizes),
 	the result is undefined.
@@ -130,6 +132,18 @@ struct Matrix {
 					result(i, j) = std::fma((*this)(i, k), mat(k, j), result(i, j));
 				}
 			}
+		}
+
+		return result;
+	}
+
+	// computes the trace of the given matrix
+	K trace() const {
+		assert(is_square());
+		K result = K{};
+
+		for (size_t i = 0; i < cols(); ++i) {
+			result += data[i][i];
 		}
 
 		return result;
