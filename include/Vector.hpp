@@ -126,6 +126,24 @@ struct Vector {
 		return result;
 	}
 
+	// compute cos(u, v), the cosine of the angle between the two vectors u and v.
+	// Cosine(θ)=A⋅B / ‖A‖ ‖B‖
+	float angle_cos(const Vector<K>& u, const Vector<K>& v) {
+		assert(u.size() == v.size());
+
+		// calc dot product u⋅v
+		K result = u.dot(v);
+
+		// calc magnitude ‖A‖ ‖B‖
+		float mag_A = u.norm();
+		float mag_B = v.norm();
+
+		// divide dot by miltiplied magnitudes
+		result = result / (mag_A * mag_B);
+
+		return result;
+	}
+
 	// TODO: • A function to reshape a vector into a matrix, and vice-versa.
 
 };
