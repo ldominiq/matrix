@@ -126,24 +126,6 @@ struct Vector {
 		return result;
 	}
 
-	// compute cos(u, v), the cosine of the angle between the two vectors u and v.
-	// Cosine(θ)=A⋅B / ‖A‖ ‖B‖
-	float angle_cos(const Vector<K>& u, const Vector<K>& v) {
-		assert(u.size() == v.size());
-
-		// calc dot product u⋅v
-		K result = u.dot(v);
-
-		// calc magnitude ‖A‖ ‖B‖
-		float mag_A = u.norm();
-		float mag_B = v.norm();
-
-		// divide dot by miltiplied magnitudes
-		result = result / (mag_A * mag_B);
-
-		return result;
-	}
-
 	// TODO: • A function to reshape a vector into a matrix, and vice-versa.
 
 };
@@ -165,6 +147,36 @@ Vector<K> linear_combination(const std::vector<Vector<K>>& u, const std::vector<
 			result[i] = std::fma(coefs[j], u[j][i], result[i]);
 		}
 	}
+	return result;
+}
+
+// compute cos(u, v), the cosine of the angle between the two vectors u and v.
+// Cosine(θ)=A⋅B / ‖A‖ ‖B‖
+template <typename K>
+float angle_cos(const Vector<K>& u, const Vector<K>& v) {
+	assert(u.size() == v.size());
+
+	// calc dot product u⋅v
+	K result = u.dot(v);
+
+	// calc magnitude ‖A‖ ‖B‖
+	float mag_A = u.norm();
+	float mag_B = v.norm();
+
+	// divide dot by miltiplied magnitudes
+	result = result / (mag_A * mag_B);
+
+	return result;
+}
+
+// computes the cross product u × v.
+template <typename K>
+Vector<K> cross_product(const Vector<K>& u, const Vector<K>& v) {
+	Vector<K> result(3);
+	result[0] = u[1] * v[2] - u[2] * v[1];
+	result[1] = u[2] * v[0] - u[0] * v[2];
+	result[2] = u[0] * v[1] - u[1] * v[0];
+
 	return result;
 }
 
