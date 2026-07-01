@@ -138,12 +138,27 @@ struct Matrix {
 	}
 
 	// computes the trace of the given matrix
+	// it will add the values on the diagonal of the matrix
 	K trace() const {
 		assert(is_square());
 		K result = K{};
 
 		for (size_t i = 0; i < cols(); ++i) {
 			result += data[i][i];
+		}
+
+		return result;
+	}
+
+	// computes the transpose matrix of a given matrix
+	// will swap the rows and cols of the matrix A is mxn -> result is nxm
+	Matrix<K> transpose() const {
+		Matrix<K> result(cols(), rows()); // we swap dimensions
+
+		for (size_t i = 0; i < rows(); ++i) {
+			for (size_t j = 0; j < cols(); ++j) {
+				result(j, i) = data[i][j];
+			}
 		}
 
 		return result;
