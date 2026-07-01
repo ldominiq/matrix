@@ -64,10 +64,10 @@ struct Vector {
 	}
 
 	// Compute the addiction of 2 vectors
-	void add(Vector<K>& v) { *this += v; }
+	void add(const Vector<K>& v) { *this += v; }
 
 	// Compute the substraction of a vector by another
-	void sub(Vector<K>& v) { *this -= v; }
+	void sub(const Vector<K>& v) { *this -= v; }
 
 	// Compute the scaling of a vector by a scalar
 	void scl(K a) { *this *= a; }
@@ -82,6 +82,7 @@ struct Vector {
 
 	// Compute the dot product of u*v
 	K dot(const Vector<K>& v) const {
+		assert(size() == v.size());
 		K result = K{};
 		for (size_t i = 0; i < size(); ++i) {
 			result += data[i] * v[i];
@@ -172,6 +173,7 @@ float angle_cos(const Vector<K>& u, const Vector<K>& v) {
 // computes the cross product u × v.
 template <typename K>
 Vector<K> cross_product(const Vector<K>& u, const Vector<K>& v) {
+	assert(u.size() == 3 && v.size() == 3);
 	Vector<K> result(3);
 	result[0] = u[1] * v[2] - u[2] * v[1];
 	result[1] = u[2] * v[0] - u[0] * v[2];

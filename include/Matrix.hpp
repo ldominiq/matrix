@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <cassert>
 #include <iostream>
+#include <cmath> // for fma
 
 /*
 	If the mathematical operation is nonsensical (ie, summing a vector and a scalar, or vectors of different sizes),
@@ -36,7 +37,7 @@ struct Matrix {
 
 	// Time complexity	O(n*m)
 	// Space complexity O(1)
-	const Matrix<K>& operator+=(Matrix<K>& m) {
+	Matrix<K>& operator+=(const Matrix<K>& m) {
 		assert(rows() == m.rows() && cols() == m.cols());
 		for (size_t i = 0; i < rows(); ++i) {
 			for (size_t j = 0; j < cols(); ++j) {
@@ -48,7 +49,7 @@ struct Matrix {
 
 	// Time complexity	O(n*m)
 	// Space complexity O(1)
-	const Matrix<K>& operator-=(Matrix<K>& m) {
+	Matrix<K>& operator-=(const Matrix<K>& m) {
 		assert(rows() == m.rows() && cols() == m.cols());
 		for (size_t i = 0; i < rows(); ++i) {
 			for (size_t j = 0; j < cols(); j++) {
@@ -82,10 +83,10 @@ struct Matrix {
 	}
 
 	// Compute the addiction of 2 matrices
-	void add(Matrix<K>& m)	{ *this += m; }
+	void add(const Matrix<K>& m)	{ *this += m; }
 
 	// Compute the substraction of a matrix by another
-	void sub(Matrix<K>& m)	{ *this -= m; }
+	void sub(const Matrix<K>& m)	{ *this -= m; }
 
 	// Compute the scaling of a matrix by a scalar
 	void scl(K a)			{ *this *= a; }
@@ -93,12 +94,13 @@ struct Matrix {
 	// compute Au (which returns a vector in Rm)
 	// max time complexity O(nm)
 	// max space complexity O(nm)
-	Vector<K> mul_vec(const Vector<K> vec) {
-		Vector<K> result(vec.size());
+	Vector<K> mul_vec(const Vector<K>& vec) const {
+		assert(cols() == vec.size());
+		Vector<K> result(rows());
 
-		for (size_t i = 0; i < vec.size(); ++i) {
-			for (size_t j = 0; j < vec.size(); ++j) {
-				result[i] += vec[j] * data[i][j];
+		for (size_t i = 0; i < rows(); ++i) {
+			for (size_t j = 0; j < cols(); ++j) {
+				result[i] = std::fma(data[i][j], vec[j], result[i]);
 			}
 		}
 
@@ -108,7 +110,8 @@ struct Matrix {
 	// compute AB (which returns a matrix in Rm×p)
 	// max time complexity O(nmp)
 	// max space complexity O(nm + mp + np)
-	Matrix<K> mul_mat(const Matrix<K> mat) {
+	Matrix<K> mul_mat(const Matrix<K>& mat) const {
+		assert(cols() == mat.rows());
 
 		size_t m = rows();
 		size_t n = cols();
