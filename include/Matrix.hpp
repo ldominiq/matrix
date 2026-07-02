@@ -164,6 +164,57 @@ struct Matrix {
 		return result;
 	}
 
+	// Computes the (reduced) row-echelon form of the given matrix. Gauss-Jordan elimination.
+	// Time complexity  O(n^3)
+	// Space complexity O(n^2) (the returned copy)
+	Matrix<K> row_echelon() const {
+		Matrix<K> result = *this;
+
+		const size_t m = result.rows();
+		const size_t n = result.cols();
+		const K epsilon = static_cast<K>(1e-7);	// float pivots are never exactly 0 so we use an epsilon value
+
+		auto abs_val = [](K x) { return x < K{} ? -x : x; };
+
+		size_t pivot_row = 0;
+		for (size_t col = 0; col < n && pivot_row < m; ++col) {
+
+			// 1. partial pivoting: pick the row with the largest |value|
+			//    in this column, at or below the current pivot row.
+			size_t best = pivot_row;
+			for (size_t i = pivot_row + 1; i < m; ++i) {
+				if (abs_val(result(i, col)) > abs_val(result(best, col)))
+					best = i;
+			}
+
+			// no usable pivot in this column -> move on without advancing row
+			if (abs_val(result(best, col)) < epsilon)
+				continue;
+
+			// 2. bring the pivot row into position
+			std::swap(result.data[pivot_row], result.data[best]);
+
+			// 3. normalize the pivot row so the pivot becomes 1
+			K pivot = result(pivot_row, col);
+			for (size_t j = 0; j < n; ++j)
+				result(pivot_row, j) /= pivot;
+
+			// 4. eliminate this column from every other row (above and below)
+			for (size_t i = 0; i < m; ++i) {
+				if (i == pivot_row)
+					continue;
+				K factor = result(i, col);
+				for (size_t j = 0; j < n; ++j)
+					result(i, j) -= factor * result(pivot_row, j);
+			}
+
+			// 5. advance to the next pivot position
+			++pivot_row;
+		}
+
+		return result;
+	}
+
 	// TODO: • A function to reshape a vector into a matrix, and vice-versa.
 };
 
