@@ -215,6 +215,67 @@ struct Matrix {
 		return result;
 	}
 
+	// 2x2: | a b |
+	//      | c d |
+	K det2(K a, K b, K c, K d) const {
+		return a * d - b * c;
+	}
+
+	// determinant of a 3x3 from its 9 values (cofactor expansion, row 0):
+	// 3x3: | a b c |
+	//      | d e f |
+	//	    | g h i |
+	K det3(K a, K b, K c,
+		   K d, K e, K f,
+		   K g, K h, K i) const {
+		return a * det2(e, f, h, i)
+			 - b * det2(d, f, g, i)
+			 + c * det2(d, e, g, h);
+	}
+
+	// determinant of a 4x4
+	K det4() const {
+		return data[0][0] * det3(data[1][1], data[1][2], data[1][3],
+								 data[2][1], data[2][2], data[2][3],
+								 data[3][1], data[3][2], data[3][3])
+			 - data[0][1] * det3(data[1][0], data[1][2], data[1][3],
+								 data[2][0], data[2][2], data[2][3],
+								 data[3][0], data[3][2], data[3][3])
+			 + data[0][2] * det3(data[1][0], data[1][1], data[1][3],
+								 data[2][0], data[2][1], data[2][3],
+								 data[3][0], data[3][1], data[3][3])
+			 - data[0][3] * det3(data[1][0], data[1][1], data[1][2],
+								 data[2][0], data[2][1], data[2][2],
+								 data[3][0], data[3][1], data[3][2]);
+	}
+
+	// computes the determinant of the given matrix. (dimensions 4 and below)
+	/*
+		1x1: |a| = a
+
+		2x2: | a b |
+		     | c d | = a*d - b*c
+
+		3x3: | a b c |
+		     | d e f | = a*det(| e f |) - b*det(| d f |) + c*det(| d e |)
+			 | g h i |		   | h i |          | g i |          | g h |
+
+					   = a*(ei - fh) - b*(di - fg) + c*(dh - eg)
+	*/
+	K determinant() const {
+		assert(is_square());
+
+		if (rows() == 1)
+			return data[0][0];
+		if (rows() == 2)
+			return det2(data[0][0], data[0][1], data[1][0], data[1][1]);
+		if (rows() == 3)
+			return det3(data[0][0], data[0][1], data[0][2],
+						data[1][0], data[1][1], data[1][2],
+						data[2][0], data[2][1], data[2][2]);
+		return det4();
+	}
+
 	// TODO: • A function to reshape a vector into a matrix, and vice-versa.
 };
 
