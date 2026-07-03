@@ -314,6 +314,29 @@ struct Matrix {
 		return result;
 	}
 
+	// computes the rank of a matrix: the number of linearly independent rows.
+	// Time complexity  O(n^3)  (dominated by row_echelon)
+	// Space complexity O(n^2)
+	size_t rank() const {
+		Matrix<K> ref = row_echelon();
+
+		const K epsilon = static_cast<K>(1e-7);
+		auto abs_val = [](K x) { return x < K{} ? -x : x; };
+
+		size_t rank = 0;
+		for (size_t i = 0; i < ref.rows(); ++i) {
+			// a row counts if it has at least one non-zero entry (a pivot)
+			for (size_t j = 0; j < ref.cols(); ++j) {
+				if (abs_val(ref(i, j)) > epsilon) {
+					++rank;
+					break;
+				}
+			}
+		}
+
+		return rank;
+	}
+
 	// TODO: • A function to reshape a vector into a matrix, and vice-versa.
 };
 
