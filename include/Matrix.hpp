@@ -6,6 +6,7 @@
 #include <cassert>
 #include <iostream>
 #include <cmath> // for fma
+#include <stdexcept>
 
 #include "Vector.hpp"
 
@@ -77,6 +78,7 @@ struct Matrix {
 			std::cout << '[';
 			for (size_t j = 0; j < cols(); j++) {
 				K x = data[i][j];
+				if (x < K{1e-5} && x > K{-1e-5}) x = K{}; // snap float noise (and -0) to 0
 				std::cout << x;
 				if (j + 1 < cols()) std::cout << ", ";
 			}
@@ -274,6 +276,42 @@ struct Matrix {
 						data[1][0], data[1][1], data[1][2],
 						data[2][0], data[2][1], data[2][2]);
 		return det4();
+	}
+
+	// computes the inverse matrix by row-reducing [ A | I ] to [ I | A^-1 ].
+	// Throws std::runtime_error if the matrix is singular (no inverse exists).
+	// Time complexity  O(n^3)
+	// Space complexity O(n^2)
+	Matrix<K> inverse() const {
+		assert(is_square());
+		const size_t n = rows();
+		const K epsilon = static_cast<K>(1e-7);
+		auto abs_val = [](K x) { return x < K{} ? -x : x; };
+
+		// build the augmented matrix [ A | I ] of size n x 2n
+		Matrix<K> aug(n, 2 * n);
+		for (size_t i = 0; i < n; ++i) {
+			for (size_t j = 0; j < n; ++j)
+				aug(i, j) = data[i][j];
+			aug(i, n + i) = K{1};				// identity on the right half
+		}
+
+		// reduce it: [ A | I ] -> [ rref(A) | ... ]
+		aug = aug.row_echelon();
+
+		// if A is invertible its rref is the identity, so every diagonal entry
+		// is 1. Otherwise the matrix is singular.
+		for (size_t i = 0; i < n; ++i)
+			if (abs_val(aug(i, i) - K{1}) > epsilon)
+				throw std::runtime_error("matrix is singular, no inverse");
+
+		// the left half is now I, so the right half is A^-1
+		Matrix<K> result(n, n);
+		for (size_t i = 0; i < n; ++i)
+			for (size_t j = 0; j < n; ++j)
+				result(i, j) = aug(i, n + j);
+
+		return result;
 	}
 
 	// TODO: • A function to reshape a vector into a matrix, and vice-versa.
